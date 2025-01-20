@@ -152,6 +152,7 @@ class Feed extends Component {
             editLoading: false,
           };
         });
+        this.loadPosts();
       })
       .catch((err) => {
         console.log(err);
