@@ -62,6 +62,7 @@ class Feed extends Component {
         return res.json();
       })
       .then((resData) => {
+        console.log(resData);
         this.setState({
           posts: resData.posts,
           totalPosts: resData.totalItems,
@@ -255,11 +256,12 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.totalPosts / 2)}
               currentPage={this.state.postPage}
             >
+           
               {this.state.posts.map((post) => (
                 <Post
                   key={post._id}
                   id={post._id}
-                  author={post.creator.name}
+                  author={post.creatorName}
                   date={new Date(post.createdAt).toLocaleDateString("en-US")}
                   title={post.title}
                   image={post.imageUrl}
