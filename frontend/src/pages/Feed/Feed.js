@@ -22,9 +22,11 @@ class Feed extends Component {
   };
 
   componentDidMount() {
+    const token = this.props.token || localStorage.getItem('token'); 
     fetch("http://localhost:8080/auth/status", {
+      method: "GET",
       headers: {
-        Authorization: "Bearer " + this.props.token,
+        Authorization: "Bearer " + token,
       },
     }
     )
@@ -43,6 +45,7 @@ class Feed extends Component {
   }
 
   loadPosts = (direction) => {
+    const token = this.props.token || localStorage.getItem('token'); 
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -57,7 +60,7 @@ class Feed extends Component {
     }
     fetch("http://localhost:8080/feed/posts?page=" + page, {
       headers: {
-        Authorization: "Bearer " + this.props.token,
+        Authorization: "Bearer " + token,
       },
     })
       .then((res) => {
@@ -78,6 +81,7 @@ class Feed extends Component {
   };
 
   statusUpdateHandler = (event) => {
+    const token = localStorage.getItem('token');
     event.preventDefault();
     fetch("http://localhost:8080/auth/status", {
       method: "PATCH",
