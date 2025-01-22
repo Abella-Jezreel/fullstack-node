@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-
+import { withRouter } from "react-router-dom";
 import Post from "../../components/Feed/Post/Post";
 import Button from "../../components/Button/Button";
 import FeedEdit from "../../components/Feed/FeedEdit/FeedEdit";
@@ -21,15 +21,54 @@ class Feed extends Component {
     editLoading: false,
   };
 
+  // componentDidMount() {
+  //   const token = this.props.token || localStorage.getItem('token');
+  //   fetch("http://localhost:8080/auth/status", {
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: "Bearer " + token,
+  //     },
+  //   }
+  //   )
+  //     .then((res) => {
+  //       if (res.status !== 200) {
+  //         throw new Error("Failed to fetch user status.");
+  //       }
+  //       return res.json();
+  //     })
+  //     .then((resData) => {
+  //       this.setState({ status: resData.status });
+  //     })
+  //     .catch(this.catchError);
+
+  //   this.loadPosts();
+  // }
+
   componentDidMount() {
-    const token = this.props.token || localStorage.getItem('token'); 
+    const token = this.props.token || localStorage.getItem("token");
+    if (token) {
+      this.fetchUserStatus(token);
+      this.loadPosts(token);
+    } else {
+      this.logoutHandler();
+    }
+  }
+
+  logoutHandler = () => {
+    this.setState({ isAuth: false, token: null });
+    localStorage.removeItem("token");
+    localStorage.removeItem("expiryDate");
+    localStorage.removeItem("userId");
+    this.props.history.push("/");
+  };
+
+  fetchUserStatus = (token) => {
     fetch("http://localhost:8080/auth/status", {
       method: "GET",
       headers: {
         Authorization: "Bearer " + token,
       },
-    }
-    )
+    })
       .then((res) => {
         if (res.status !== 200) {
           throw new Error("Failed to fetch user status.");
@@ -40,12 +79,10 @@ class Feed extends Component {
         this.setState({ status: resData.status });
       })
       .catch(this.catchError);
-
-    this.loadPosts();
-  }
+  };
 
   loadPosts = (direction) => {
-    const token = this.props.token || localStorage.getItem('token'); 
+    const token = this.props.token || localStorage.getItem("token");
     if (direction) {
       this.setState({ postsLoading: true, posts: [] });
     }
@@ -81,7 +118,6 @@ class Feed extends Component {
   };
 
   statusUpdateHandler = (event) => {
-    const token = localStorage.getItem('token');
     event.preventDefault();
     fetch("http://localhost:8080/auth/status", {
       method: "PATCH",
@@ -92,8 +128,7 @@ class Feed extends Component {
       body: JSON.stringify({
         status: this.state.status,
       }),
-    }
-    )
+    })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
           throw new Error("Can't update status!");
@@ -275,7 +310,6 @@ class Feed extends Component {
               lastPage={Math.ceil(this.state.totalPosts / 2)}
               currentPage={this.state.postPage}
             >
-           
               {this.state.posts.map((post) => (
                 <Post
                   key={post._id}
@@ -297,4 +331,4 @@ class Feed extends Component {
   }
 }
 
-export default Feed;
+export default withRouter(Feed);
