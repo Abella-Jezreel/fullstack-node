@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import openSocket from "socket.io-client";
 import { withRouter } from "react-router-dom";
 import Post from "../../components/Feed/Post/Post";
 import Button from "../../components/Button/Button";
@@ -49,6 +50,7 @@ class Feed extends Component {
     if (token) {
       this.fetchUserStatus(token);
       this.loadPosts(token);
+      openSocket("http://localhost:8080");
     } else {
       this.logoutHandler();
     }
