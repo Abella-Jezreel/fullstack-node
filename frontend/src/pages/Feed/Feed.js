@@ -54,6 +54,8 @@ class Feed extends Component {
       socket.on("posts", (data) => {
         if (data.action === "create") {
           this.addPost(data.post);
+        } else if (data.action === "update") {
+          this.updatedPost(data.post);
         }
       });
     } else {
@@ -76,6 +78,17 @@ class Feed extends Component {
       };
     });
   };
+
+  updatedPost = (post) => {
+    this.setState((prevState) => {
+      const updatedPosts = [...prevState.posts];
+      const postIndex = updatedPosts.findIndex((p) => p._id === post._id);
+      updatedPosts[postIndex] = post;
+      return {
+        posts: updatedPosts,
+      };
+    });
+  }
 
   logoutHandler = () => {
     this.setState({ isAuth: false, token: null });
