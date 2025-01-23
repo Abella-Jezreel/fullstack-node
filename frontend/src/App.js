@@ -28,7 +28,7 @@ class App extends Component {
     const token = localStorage.getItem("token");
     const expiryDate = localStorage.getItem("expiryDate");
     if (!token || !expiryDate) {
-      this.props.history.push("/login");
+      this.props.history.push("/");
       return;
     }
     if (new Date(expiryDate) <= new Date()) {
