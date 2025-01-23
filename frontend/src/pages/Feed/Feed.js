@@ -46,7 +46,7 @@ class Feed extends Component {
   // }
 
   componentDidMount() {
-    const token = this.props.token || localStorage.getItem("token");
+    const token = this.props.token
     if (token) {
       this.fetchUserStatus(token);
       this.loadPosts(token);
@@ -55,6 +55,22 @@ class Feed extends Component {
       this.logoutHandler();
     }
   }
+
+  addPost = (post) => {
+    this.setState((prevState) => {
+      const updatedPosts = [...prevState.posts];
+      if (prevState.postPage === 1) {
+        if (prevState.posts.length >= 2) {
+          updatedPosts.pop();
+        }
+        updatedPosts.unshift(post);
+      }
+      return {
+        posts: updatedPosts,
+        totalPosts: prevState.totalPosts + 1,
+      };
+    });
+  };
 
   logoutHandler = () => {
     this.setState({ isAuth: false, token: null });
