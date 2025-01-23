@@ -52,10 +52,13 @@ class Feed extends Component {
       this.loadPosts(token);
       const socket = openSocket("http://localhost:8080");
       socket.on("posts", (data) => {
+        console.log(data, 'data');
         if (data.action === "create") {
           this.addPost(data.post);
         } else if (data.action === "update") {
           this.updatedPost(data.post);
+        } else if (data.action === "delete") {
+          this.deletePost(data.post);
         }
       });
     } else {
@@ -89,6 +92,16 @@ class Feed extends Component {
       };
     });
   }
+
+  deletePost = (postId) => {
+    this.setState((prevState) => {
+      const updatedPosts = prevState.posts.filter((p) => p._id !== postId);
+      return {
+        posts: updatedPosts,
+        totalPosts: prevState.totalPosts - 1,
+      };
+    });
+  };
 
   logoutHandler = () => {
     this.setState({ isAuth: false, token: null });
