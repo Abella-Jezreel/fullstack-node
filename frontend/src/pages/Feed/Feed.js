@@ -59,6 +59,7 @@ class Feed extends Component {
           this.updatedPost(data.post);
         } else if (data.action === "delete") {
           this.deletePost(data.post);
+          this.loadPosts();
         }
       });
     } else {
@@ -99,6 +100,7 @@ class Feed extends Component {
       return {
         posts: updatedPosts,
         totalPosts: prevState.totalPosts - 1,
+       
       };
     });
   };
@@ -298,6 +300,7 @@ class Feed extends Component {
           const updatedPosts = prevState.posts.filter((p) => p._id !== postId);
           return { posts: updatedPosts, postsLoading: false };
         });
+        this.loadPosts();
       })
       .catch((err) => {
         console.log(err);
