@@ -17,7 +17,7 @@ class App extends Component {
   state = {
     showBackdrop: false,
     showMobileNav: false,
-    isAuth: true,
+    isAuth: false,
     token: null,
     userId: null,
     authLoading: false,
@@ -159,7 +159,10 @@ class App extends Component {
     this.setState({ error: null });
   };
 
+  
+  
   render() {
+    console.log(this.state.isAuth, 'auth');
     let routes = (
       <Switch>
         <Route
